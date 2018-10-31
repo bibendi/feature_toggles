@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 require "feature_toggles/version"
+require "feature_toggles/mechatronic"
 
 module FeatureToggles
-  # Your code goes here...
+  module_function
+
+  def build(&block)
+    Mechatronic.new(&block)
+  end
 end

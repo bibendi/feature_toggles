@@ -1,8 +1,12 @@
+[![Gem Version](https://badge.fury.io/rb/feature_toggles.svg)](https://badge.fury.io/rb/feature_toggles)
+[![Build Status](https://travis-ci.org/bibendi/feature_toggles.svg?branch=master)](https://travis-ci.org/bibendi/feature_toggles)
+
 # FeatureToggles
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/feature_toggles`. To experiment with that code, run `bin/console` for an interactive prompt.
+This gem provides a mechanism for pending features that take longer than a single release cycle. The basic idea is to have a configuration file that defines a bunch of toggles for various features you have pending. The running application then uses these toggles in order to decide whether or not to show the new feature.
 
-TODO: Delete this and the text above, and describe your gem
+<a href="https://evilmartians.com/?utm_source=activerecord-postgres_enum">
+<img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg" alt="Sponsored by Evil Martians" width="236" height="54"></a>
 
 ## Installation
 
@@ -22,7 +26,25 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+features = FeatureToggles.build do
+  # define env var prefix to enable features
+  # globally by passing MY_PREFIX_BAR=1
+  env "MY_PREFIX"
+
+  feature :bar do
+    user.can_bar?
+  end
+
+  feature :foo do |user: nil|
+    !user.nil? && user.can_foo?
+  end
+end
+
+features.enabled?(:bar)
+features.enabled?(:bar, user: user)
+features.for(user: user).enabled?(:foo)
+```
 
 ## Development
 
@@ -32,7 +54,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/feature_toggles. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/bibendi/feature_toggles. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -40,4 +62,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the FeatureToggles project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/feature_toggles/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the FeatureToggles project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/bibendi/feature_toggles/blob/master/CODE_OF_CONDUCT.md).

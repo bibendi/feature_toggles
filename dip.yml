@@ -27,7 +27,7 @@ interaction:
 
   rspec:
     service: app
-    command: bundle exec appraisal bundle exec rspec
+    command: bundle exec rspec
 
   rubocop:
     service: app
