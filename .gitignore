@@ -3,9 +3,10 @@
 /_yardoc/
 /coverage/
 /doc/
+/gemfiles/
 /pkg/
 /spec/reports/
 /tmp/
-
-# rspec failure tracking
+.pry_history
 .rspec_status
+Gemfile.lock
