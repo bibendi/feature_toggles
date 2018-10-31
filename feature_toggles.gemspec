@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Michael Merkushin"]
   spec.email         = ["merkushin.m.s@gmail.com"]
 
-  spec.summary       = ""
+  spec.summary       = "This gem provides a mechanism for pending features."
   spec.homepage      = "https://github.com/bibendi/feature_toggles"
   spec.license       = "MIT"
 
