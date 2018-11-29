@@ -46,6 +46,73 @@ features.enabled?(:bar, user: user)
 features.for(user: user).enabled?(:foo)
 ```
 
+### Example
+
+This is step-by-step guide to add `feature_toggles` to Rails application.
+
+**Step 0. (optional) Add `features` to User model**
+
+**NOTE**: This is not the part of this gem–you can model you per-user features settings differently.
+
+```ruby
+class AddFeaturesToUsers < ActiveRecord::Migration
+  def change
+    # we use a `features` array column to store user's active features
+    add_column :users, :features, :string, array: true, default: []
+  end
+end
+```
+
+**Step 1. Define features**
+
+```ruby
+# config/initializers/features.rb
+Features = FeatureToggles.build do
+  env "FEATURE"
+
+  feature :chat do |user: nil|
+    user&.features.include?("chat")
+  end
+end
+```
+
+**Step 2. Add `current_features` helper and use it.**
+
+```ruby
+class ApplicationController < ActionController::Base
+  # ...
+  helper_method :current_features
+  
+  def current_features
+    Features.for(user: current_user)
+  end
+end
+```
+
+**Step 3. Use `current_features`.**
+
+For example, in your navigation template:
+
+```erb
+<ul>
+ <% if current_features.enabled?(:chat) %>
+   <li><a href="/chat">Chat</a></li>
+ <% end %>
+</ul>
+```
+
+Or in your controller:
+
+```ruby
+class ChatController < ApplicationController
+  def index
+    unless current_features.enabled?(:chat)
+      return render template: "comming_soon"
+    end
+  end
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
