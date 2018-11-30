@@ -5,7 +5,7 @@
 
 This gem provides a mechanism for pending features that take longer than a single release cycle. The basic idea is to have a configuration file that defines a bunch of toggles for various features you have pending. The running application then uses these toggles in order to decide whether or not to show the new feature.
 
-<a href="https://evilmartians.com/?utm_source=activerecord-postgres_enum">
+<a href="https://evilmartians.com/?utm_source=feature_toggles">
 <img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg" alt="Sponsored by Evil Martians" width="236" height="54"></a>
 
 ## Installation
