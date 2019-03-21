@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 require "bundler/setup"
-require "feature_toggles"
+require "pry-byebug"
+
+require "combustion"
+Combustion.initialize!
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

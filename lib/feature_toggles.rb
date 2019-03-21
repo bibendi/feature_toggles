@@ -6,7 +6,9 @@ require "feature_toggles/mechatronic"
 module FeatureToggles
   module_function
 
-  def build(&block)
-    Mechatronic.new(&block)
+  def build(file_paths = nil, &block)
+    Mechatronic.new(file_paths, &block)
   end
 end
+
+require "feature_toggles/railtie" if defined?(Rails)
