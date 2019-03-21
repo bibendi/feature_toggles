@@ -13,7 +13,7 @@ This gem provides a mechanism for pending features that take longer than a singl
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'feature_toggles'
+gem "feature_toggles"
 ```
 
 And then execute:
@@ -24,7 +24,9 @@ Or install it yourself as:
 
     $ gem install feature_toggles
 
-## Usage
+## Framework-agnostic usage
+
+Features could be defined dynamically
 
 ```ruby
 features = FeatureToggles.build do
@@ -46,7 +48,13 @@ features.enabled?(:bar, user: user)
 features.for(user: user).enabled?(:foo)
 ```
 
-### Example
+or loaded from files
+
+```ruby
+features = FeatureToggles.build(["/path/to/features.rb"])
+```
+
+### Rails usage
 
 This is step-by-step guide to add `feature_toggles` to Rails application.
 
@@ -65,16 +73,18 @@ end
 
 **Step 1. Define features**
 
+Features from file `<rails-root-or-engine>/config/initializers/features.rb` are loaded by convention.
+
 ```ruby
 # config/initializers/features.rb
-Features = FeatureToggles.build do
-  env "FEATURE"
+env "FEATURE"
 
-  feature :chat do |user: nil|
-    user&.features.include?("chat")
-  end
+feature :chat do |user: nil|
+  user&.features.include?("chat")
 end
 ```
+
+Features will be available at `Rails.features` after the end of application initialization.
 
 **Step 2. Add `current_features` helper and use it.**
 
@@ -82,9 +92,9 @@ end
 class ApplicationController < ActionController::Base
   # ...
   helper_method :current_features
-  
+
   def current_features
-    Features.for(user: current_user)
+    Rails.features.for(user: current_user)
   end
 end
 ```

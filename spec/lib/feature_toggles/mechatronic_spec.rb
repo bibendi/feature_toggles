@@ -1,6 +1,42 @@
 # frozen_string_literal: true
 
+require "tempfile"
+
 RSpec.describe FeatureToggles::Mechatronic do
+  describe "definition file paths" do
+    let(:file_a) do
+      Tempfile.new("file_a").tap do |file|
+        file.write(<<~RUBY)
+          feature(:x) { false }
+        RUBY
+
+        file.flush
+      end
+    end
+
+    let(:file_b) do
+      Tempfile.new("file_b").tap do |file|
+        file.write(<<~RUBY)
+          feature(:y) { |a: nil| a == 0 }
+        RUBY
+
+        file.flush
+      end
+    end
+
+    subject { described_class.new([file_a.path, file_b.path]) }
+
+    specify "without params", :aggregate_failures do
+      expect(subject.enabled?(:x)).to eq false
+      expect(subject.enabled?(:y)).to eq false
+    end
+
+    specify "with params", :aggregate_failures do
+      expect(subject.enabled?(:x, a: 0)).to eq false
+      expect(subject.enabled?(:y, a: 0)).to eq true
+    end
+  end
+
   subject { described_class.new }
 
   describe "#feature" do

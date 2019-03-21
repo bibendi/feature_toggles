@@ -7,8 +7,12 @@ module FeatureToggles
     # Which env variables should be considered truthy
     POSSIBLE_ENABLING_VALUES = %w(true on yes 1).freeze
 
-    def initialize(&block)
+    def initialize(definition_file_paths = nil, &block)
       @features = {}
+
+      definition_file_paths&.each do |file|
+        instance_eval(File.read(file), file)
+      end
 
       instance_eval(&block) if block_given?
     end
