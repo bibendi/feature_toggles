@@ -73,10 +73,10 @@ end
 
 **Step 1. Define features**
 
-Features from file `<rails-root-or-engine>/config/initializers/features.rb` are loaded by convention.
+Features from file `<rails-root-or-engine>/config/features.rb` are loaded by convention.
 
 ```ruby
-# config/initializers/features.rb
+# config/features.rb
 env "FEATURE"
 
 feature :chat do |user: nil|
