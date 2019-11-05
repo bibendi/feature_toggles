@@ -123,6 +123,24 @@ class ChatController < ApplicationController
 end
 ```
 
+### Metadata
+
+You can add arbitrary metadata to features:
+
+```ruby
+feature :manual_quantity_backsync, icon: :updated, description: "Manual quantity sync for imported products" do |user: nil|
+  !!user&.features&.fetch("manual_quantity_backsync", false)
+end
+```
+
+That metadata can be later programmatically accessed and exposed into admin panels, API documentation, etc.
+
+```ruby
+Rails.features.first.metadata
+# => { icon: :updated, description: "Manual quantity sync for imported products" }
+```
+
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
