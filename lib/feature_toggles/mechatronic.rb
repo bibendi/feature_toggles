@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require_relative "proxy"
+require_relative "feature"
 
 module FeatureToggles
   class Mechatronic
+    include Enumerable
+
     # Which env variables should be considered truthy
     POSSIBLE_ENABLING_VALUES = %w(true on yes 1).freeze
 
@@ -21,10 +24,10 @@ module FeatureToggles
       @env_prefix = val
     end
 
-    def feature(name, &block)
+    def feature(name, **metadata, &block)
       raise(ArgumentError, "Flag #{name} already exists") if @features.key?(name)
 
-      features[name] = block
+      features[name] = Feature.new(name, block, **metadata)
     end
 
     def names
@@ -32,7 +35,7 @@ module FeatureToggles
     end
 
     def enabled?(feature, *args)
-      enabled_globally?(feature) || !!features.fetch(feature).call(*args)
+      enabled_globally?(feature) || !!features.fetch(feature).resolver.call(*args)
     end
 
     def for(*args)
@@ -49,6 +52,14 @@ module FeatureToggles
       Hash[features.map do |feature, _|
         [feature, enabled?(feature, *args)]
       end]
+    end
+
+    def each
+      if block_given?
+        features.values.each { |f| yield f }
+      else
+        features.values.to_enum
+      end
     end
 
     private
