@@ -45,6 +45,14 @@ RSpec.describe FeatureToggles::Mechatronic do
 
       it { expect { subject.feature(:foo) { false } }.to raise_error(ArgumentError) }
     end
+
+    context "with provided metadata" do
+      before { subject.feature(:foo, icon: :download) { true } }
+
+      it "saves it into the feature" do
+        expect(subject.first.metadata).to eq(icon: :download)
+      end
+    end
   end
 
   describe "#enabled?" do
@@ -75,6 +83,24 @@ RSpec.describe FeatureToggles::Mechatronic do
         expect(subject.enabled?(:x)).to eq true
         expect(subject.enabled?(:y)).to eq false
       end
+    end
+  end
+
+  describe "#each" do
+    subject do
+      described_class.new do
+        feature(:x) { false }
+        feature(:y) { true }
+      end
+    end
+
+    context "without block" do
+      it { expect(subject.each).to be_an(Enumerator) }
+      it { expect(subject.each.first).to be_an(FeatureToggles::Feature) }
+    end
+
+    context "with block" do
+      it { expect(subject.map(&:name)).to eq(%i[x y]) }
     end
   end
 
