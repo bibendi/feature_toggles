@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FeatureToggles
   class Feature
     def initialize(name, resolver, **metadata)
