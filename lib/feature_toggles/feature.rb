@@ -3,7 +3,7 @@
 module FeatureToggles
   class Feature
     def initialize(name, resolver, **metadata)
-      @name     = name
+      @name = name
       @resolver = resolver
       @metadata = metadata
     end

@@ -8,7 +8,7 @@ module FeatureToggles
     include Enumerable
 
     # Which env variables should be considered truthy
-    POSSIBLE_ENABLING_VALUES = %w(true on yes 1).freeze
+    POSSIBLE_ENABLING_VALUES = %w[true on yes 1].freeze
 
     def initialize(definition_file_paths = nil, &block)
       @features = {}
@@ -17,7 +17,7 @@ module FeatureToggles
         instance_eval(File.read(file), file)
       end
 
-      instance_eval(&block) if block_given?
+      instance_eval(&block) if block
     end
 
     def env(val)
@@ -34,24 +34,24 @@ module FeatureToggles
       features.keys
     end
 
-    def enabled?(feature, *args)
-      enabled_globally?(feature) || !!features.fetch(feature).resolver.call(*args)
+    def enabled?(feature, *args, **kwargs)
+      enabled_globally?(feature) || !!features.fetch(feature).resolver.call(*args, **kwargs)
     end
 
-    def for(*args)
-      Proxy.new(self, *args)
+    def for(*args, **kwargs)
+      Proxy.new(self, *args, **kwargs)
     end
 
-    def to_a(*args)
+    def to_a(*args, **kwargs)
       names.map do |feature|
-        {feature: feature, enabled: enabled?(feature, *args)}
+        {feature: feature, enabled: enabled?(feature, *args, **kwargs)}
       end
     end
 
-    def to_h(*args)
-      Hash[features.map do |feature, _|
-        [feature, enabled?(feature, *args)]
-      end]
+    def to_h(*args, **kwargs)
+      features.map do |feature, _|
+        [feature, enabled?(feature, *args, **kwargs)]
+      end.to_h
     end
 
     def each

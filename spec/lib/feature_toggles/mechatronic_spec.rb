@@ -109,7 +109,7 @@ RSpec.describe FeatureToggles::Mechatronic do
       described_class.new do
         feature(:x) { false }
         feature(:y) { |a: nil| a == 0 }
-      end.for(params)
+      end.for(**params)
     end
 
     let(:params) { {a: 0} }
