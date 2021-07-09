@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe FeatureToggles::Feature do
-  subject { described_class.new(name, resolver, metadata) }
+  subject { described_class.new(name, resolver, **metadata) }
 
-  let(:name)     { "some-feature" }
+  let(:name) { "some-feature" }
   let(:metadata) { {foo: :bar, baz: nil} }
   let(:resolver) { proc { true } }
 
