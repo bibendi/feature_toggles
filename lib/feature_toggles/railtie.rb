@@ -26,7 +26,7 @@ module FeatureToggles
       file = ::Rails.root.join("config", "features.rb")
       paths << file.to_s if file.exist?
 
-      Rails.application.config.features = FeatureToggles.build(paths)
+      Rails.application.config.features = FeatureToggles.build(paths.uniq)
     end
   end
 end
